@@ -1,0 +1,3 @@
+# Advanced-C-Programming-CSC8501-2016-17
+My exercises of Advanced C++ Programming (CSC8501) 2016/17.
+This repository is a solution and it contains several projects in every single folder like Exercise6, Exercise7...
