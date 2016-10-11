@@ -3,18 +3,39 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include "BinarySearchTree.h"
 
 using namespace std;
 
-struct node {
-	int value;
-	struct node* left;
-	struct node* right;
-};
+BinarySearchTree::BinarySearchTree () : root (nullptr) {}
+BinarySearchTree::~BinarySearchTree () {
 
-struct node* root = nullptr;
+	if (root)
+	{
+		_terminate_tree (&root);
+	}
+}
 
-void insert_integer (struct node** tree, int value)
+void BinarySearchTree::insert_integer (int value)
+{
+	_insert_integer (&root, value);
+}
+
+void BinarySearchTree::print_tree ()
+{
+	_print_tree (root);
+}
+
+void BinarySearchTree::terminate_tree ()
+{
+	_terminate_tree (&root);
+}
+
+bool BinarySearchTree::search_tree (int value) {
+	return _search_tree (root, value);
+}
+
+void BinarySearchTree::_insert_integer (struct node** tree, int value)
 {
 	if (*tree == nullptr)
 	{
@@ -27,31 +48,11 @@ void insert_integer (struct node** tree, int value)
 	{
 		if (value > (*tree)->value)
 		{
-			if ((*tree)->right != nullptr)
-			{
-				insert_integer (&((*tree)->right), value);
-			}
-			else
-			{
-				(*tree)->right = new node;
-				(*tree)->right->value = value;
-				(*tree)->right->left = nullptr;
-				(*tree)->right->right = nullptr;
-			}
+			_insert_integer (&((*tree)->right), value);
 		}
 		else if (value < (*tree)->value)
 		{
-			if ((*tree)->left != nullptr)
-			{
-				insert_integer (&((*tree)->left), value);
-			}
-			else
-			{
-				(*tree)->left = new node;
-				(*tree)->left->value = value;
-				(*tree)->left->left = nullptr;
-				(*tree)->left->right = nullptr;
-			}
+			_insert_integer (&((*tree)->left), value);
 		}
 		else if (value == (*tree)->value)
 		{
@@ -60,17 +61,17 @@ void insert_integer (struct node** tree, int value)
 	}
 }
 
-void print_tree (struct node* tree) 
+void BinarySearchTree::_print_tree (struct node* tree) 
 {
 	if (tree)
 	{
 		if (tree->left)
-			print_tree (tree->left);
+			_print_tree (tree->left);
 
 		cout << tree->value << endl;
 
 		if (tree->right)
-			print_tree (tree->right);
+			_print_tree (tree->right);
 	}
 	else
 	{
@@ -78,15 +79,15 @@ void print_tree (struct node* tree)
 	}
 }
 
-void terminate_tree (struct node** tree)
+void BinarySearchTree::_terminate_tree (struct node** tree)
 {
 	if (*tree)
 	{
 		if ((*tree)->left)
-			terminate_tree (&((*tree)->left));
+			_terminate_tree (&((*tree)->left));
 
 		if ((*tree)->right)
-			terminate_tree (&((*tree)->right));
+			_terminate_tree (&((*tree)->right));
 
 		delete (*tree);
 		*tree = nullptr;
@@ -97,17 +98,17 @@ void terminate_tree (struct node** tree)
 	}
 }
 
-int main()
-{
-	insert_integer (&root, 2);
-	insert_integer (&root, 9);
-	insert_integer (&root, 3);
+bool BinarySearchTree::_search_tree (struct node* tree, int value) {
+	
+	if (tree)
+	{
+		if (tree->value	== value)
+			return true;
+		else if (tree->value > value)
+			return _search_tree (tree->left, value);
+		else
+			return _search_tree (tree->right, value);
+	}
 
-	print_tree (root);
-
-	terminate_tree (&root);
-
-	system ("pause");
-
-    return 0;
+	return false;
 }
