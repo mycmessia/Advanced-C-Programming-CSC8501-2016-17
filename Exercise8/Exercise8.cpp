@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "BattleShip.h"
 
 void copy_name ()
 {
@@ -79,7 +80,15 @@ void battleship ()
 
 int main()
 {
-	battleship ();
+	int arr[2][2];
+	arr[0][0] = 7;
+	arr[0][1] = 8;
+	arr[1][0] = 9;
+	arr[1][1] = 11;
+
+	int* pa = &arr[0][0];
+
+	std::cout << *(pa + 3) << std::endl;
 
 	system ("pause");
     return 0;
