@@ -9,7 +9,6 @@ using namespace std;
 
 BinarySearchTree::BinarySearchTree () : root (nullptr) {}
 BinarySearchTree::~BinarySearchTree () {
-
 	if (root)
 	{
 		_terminate_tree (&root);

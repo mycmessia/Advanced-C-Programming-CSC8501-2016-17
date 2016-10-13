@@ -7,6 +7,8 @@ using namespace std;
 int main()
 {
 	BinarySearchTree bst;
+	BinarySearchTree bst2 = bst;
+
 	bst.insert_integer (2);
 	bst.insert_integer (7);
 	bst.insert_integer (6);

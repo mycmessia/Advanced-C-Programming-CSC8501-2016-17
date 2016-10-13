@@ -1,22 +1,27 @@
 // Exercise11.cpp : Defines the entry point for the console application.
 //
-
 #include "stdafx.h"
-#include "Matrix.h"
 #include "MatrixDefinition.h"
-#include <iostream>
 
 using namespace std;
 
 int main()
 {
-	Matrix<int> m_int;
+	Matrix<int> mtx1;
+	mtx1.set_element (1, 1, 4);
+	cout << mtx1;
 
-	//Matrix<double> m_double (3, 4);
-	//m_double.set_element (2, 2, 8.55);
-	//cout << "element at 2,2 is " << m_double.get_element (2, 2) << "\n";
+	Matrix<int> mtx2;
+	mtx2.set_element (2, 2, 2);
+	cout << mtx2;
+
+	Matrix<int> mtx3;
+	mtx3 = mtx2;
+	cout << mtx3;
+
+	Matrix<int> product = (mtx1 * mtx2);
+	cout << product;
 
 	system ("pause");
-
     return 0;
 }

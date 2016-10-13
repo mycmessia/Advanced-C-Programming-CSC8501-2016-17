@@ -1,9 +1,5 @@
-#pragma once
-#include "stdafx.h"
-#include <iostream>
-
-#ifndef _MATRIX_
-#define _MATRIX_
+#include <ostream>
+using namespace std;
 
 template <typename T>
 class Matrix {
@@ -22,10 +18,12 @@ public:
 	// here is because they need to be friend with class Matrix so
 	// these two functions can get access to the protected and private
 	// members of Matrix.
+
 	template <typename E> 
-	friend std::ostream& operator<<(std::ostream& ostr, const Matrix<E>& mtx);
-	template <typename E>
-	friend Matrix<E> operator* (const Matrix<E>& a, const Matrix<E>& b);
+	friend ostream& operator<<(ostream& ostr, const Matrix<E>& mtx);
+	
+	//template <typename T>
+	//Matrix<T> operator* (const Matrix<T>& a, const Matrix<T>& b);
 
 	int get_x_size() const { return x_size; }
 	int get_y_size() const { return y_size; }
@@ -39,4 +37,16 @@ private:
 	int y_size;
 };
 
-#endif
+//template <typename T>
+//class foo {
+//public:
+//	template <typename E>
+//	friend ostream& 
+//
+//};
+
+
+auto main()->int {
+
+	return 0;
+}
