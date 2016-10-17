@@ -9,6 +9,11 @@ public:
 	virtual ~Base () {
 		cout << "~Base called" << endl;
 	};
+
+	void func ()
+	{
+		Base b;	
+	}
 };
 
 class Derived : public Base {
