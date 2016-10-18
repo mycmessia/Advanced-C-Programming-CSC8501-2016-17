@@ -9,31 +9,52 @@ int main ()
 
 	int id = 0;
 	char c = 'y';
+	string inputFile;
 
 	while (1)
 	{
-		cout << "Enter a number to choose a encoder permutaion (0-5):" << endl;
-		cin >> id;
+		cout << "Please Enter the input file name:" << endl;
+		cin >> inputFile;
 		cin.clear ();
-		cin.ignore (1000, '\n');	// discard 1000 characters until next line
+		cin.ignore (1000, '\n');
 
-		if (id < 0 || id > 5) id = 0;
+		try 
+		{
+			ifstream fin;
+			fin.open (inputFile);
+			fin.close ();
 
-		Encoder encoder (id);
-		string outputFile = "output" + to_string(id) + ".txt";
+			if (fin.fail ())
+			{
+				throw invalid_argument ("No input file exists " + inputFile + ".");
+			}
+			else
+			{
+				cout << "Please Enter a number to choose a encoder permutaion (0-5):" << endl;
+				cin >> id;
+				cin.clear ();
+				cin.ignore (1000, '\n');	// discard 1000 characters until next line
 
-		ofstream outfile (outputFile);
-		outfile.close();
+				if (id < 0 || id > 5) id = 0;
 
-		encoder.encode ("input.txt", outputFile);
+				Encoder encoder (id);
+				string outputFile = "output" + to_string(id) + ".txt";
 
-		cout << "Encoding with encoder " << id << " has finished." << endl;
-		cout << "Check the output in file " << outputFile << endl;
+				encoder.encode ("input.txt", outputFile);
 
-		cout << "Do you need another encoding (y/n)" << endl;
-		cin >> c;
+				cout << "Encoding with encoder " << id << " has finished." << endl;
+				cout << "Check the output in file " << outputFile << "." << endl;
 
-		if (c != 'y') break;
+				cout << "Do you need another encoding (y/n)?" << endl;
+				cin >> c;
+
+				if (c != 'y') break;
+			}
+		}
+		catch (invalid_argument s)
+		{
+			cout << s.what () << endl;
+		}
 	}
 
 	system ("pause");

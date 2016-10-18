@@ -10,6 +10,7 @@ void EncoderState0::encode (string inputFile, string outputFile)
 	int n;
 
 	fstream fin, fout;
+
 	fin.open (inputFile, fstream::in);
 	fout.open (outputFile, fstream::out);
 
@@ -23,6 +24,6 @@ void EncoderState0::encode (string inputFile, string outputFile)
 		Encoder::shiftRegisters (registers, n);
 	}
 
-	fin.close ();
 	fout.close ();
+	fin.close ();
 }
