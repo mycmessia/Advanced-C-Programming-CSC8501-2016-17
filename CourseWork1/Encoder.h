@@ -1,34 +1,39 @@
 #pragma once
-#ifndef _ENCODER_
+#ifndef _ENC0DER_
 #define _ENCODER_
 
-#include <iostream>
-#include <fstream>
-#include <string>
+#include <vector>
+#include "Register.h"
+#include "XORGate.h"
 
-using namespace std;
-
-class EncoderState;
+enum {
+	READ_FROM_INPUT,
+	READ_FROM_REG1,
+	READ_FROM_REG2,
+	READ_FROM_REG3
+};
 
 class Encoder {
 public:
-	Encoder (int t);
+	Encoder () {}
+	Encoder (vector<int>& v1, vector<int>& v2);
 	~Encoder ();
 
-	static const int REGISTERS_COUNT = 3;
-	static void initRegisters (int arr[]);
-	static void shiftRegisters (int arr[], int input);
-	static void printRegisters (int arr[]);
-
-	static int XORGate (int n1, int n2);
-
-	// read input from a file and output to another file
-	void encode (string inputFile, string outputFile);
+	void encode (string inputFile);
 
 private:
-	EncoderState* state;
+	Register registers[3];
 
-	int type;
+	XORGate* gate1;
+	XORGate* gate2;
+
+	vector<int> gate1_vec;
+	vector<int> gate2_vec;
+
+	vector<Register*> reg_vec1;
+	vector<Register*> reg_vec2;
+
+	void shiftRegisters (int input);
 };
 
-#endif
+#endif _ENCODER_
