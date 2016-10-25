@@ -21,12 +21,16 @@ Encoder::Encoder (vector<int>& v1, vector<int>& v2)
 
 	gate1 = new XORGate;
 	gate2 = new XORGate;
+
+	stateDiagram = new StatesDiagram;
 }
 
 Encoder::~Encoder ()
 {
 	delete gate1;
 	delete gate2;
+
+	delete stateDiagram;
 }
 
 void Encoder::encode (string inputFile)
@@ -90,23 +94,57 @@ void Encoder::encode (string inputFile)
 	fin.open (inputFile, fstream::in);
 	fout.open (outputFile, fstream::out);
 
+	int gate2output, gate1output;
+
 	while (EOF != (c = fin.get ()))
 	{
 		n = c - '0';
 
+		//cout << "Input: " << n << " ";
+		//cout << "Initial State: " << registers[0] << registers[1] << registers[2] << " ";
+
 		// either gate1 or gate2 must read from the input file
 		if (isGate2ReadFromInput)
-			fout <<	gate2->calculate (reg_vec2, n);
+		{
+			gate2output = gate2->calculate (reg_vec2, n);
+			fout <<	gate2output;
+		}
 		else
-			fout <<	gate2->calculate (reg_vec2);
+		{
+			gate2output = gate2->calculate (reg_vec2);
+			fout << gate2output;
+		}
 
 		if (isGate1ReadFromInput)
-			fout <<	gate1->calculate (reg_vec1, n);
+		{
+			gate1output = gate1->calculate (reg_vec1, n);
+			fout <<	gate1output;
+		}
 		else
-			fout <<	gate1->calculate (reg_vec1);
+		{
+			gate1output = gate1->calculate (reg_vec1);
+			fout <<	gate1output;
+		}
+
+		for (int i = 0; i < REGISTER_STATES_LENGTH; i++)
+		{
+			if (n == stateDiagram->matrix[i][0] &&
+				registers[0].get_value () == stateDiagram->matrix[i][1] &&
+				registers[1].get_value () == stateDiagram->matrix[i][2] &&
+				registers[2].get_value () == stateDiagram->matrix[i][3])
+			{
+				stateDiagram->matrix[i][7] = gate2output;
+				stateDiagram->matrix[i][8] = gate1output;
+			}
+		}
 
 		shiftRegisters (n);
+
+		//cout << "Final State: " << registers[0] << registers[1] << registers[2] << " ";
+		//cout << "Output: " << gate2output << gate1output << endl;
 	}
+
+	stateDiagram->print ();
 
 	fout.close ();
 	fin.close ();

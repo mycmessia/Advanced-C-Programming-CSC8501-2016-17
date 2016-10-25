@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Register Register::operator+ (const Register& r)
+Register Register::operator^ (const Register& r)
 {
 	Register newR;
 

@@ -6,7 +6,7 @@ int XORGate::calculate (vector<Register*>& v)
 
 	for (unsigned i = 0; i < v.size (); i++)
 	{
-		temp = temp + *v[i];
+		temp = temp ^ *v[i];
 	}
 
 	return temp.get_value ();
@@ -18,7 +18,7 @@ int XORGate::calculate (vector<Register*>& v, int input)
 
 	for (unsigned i = 0; i < v.size (); i++)
 	{
-		temp = temp + *v[i];
+		temp = temp ^ *v[i];
 	}
 
 	if (input == temp.get_value ())

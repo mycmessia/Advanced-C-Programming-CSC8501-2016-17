@@ -45,6 +45,11 @@ void Generator::generateEncoder ()
 
 				doEncoding (gate1_chosen_vec, gate2_chosen_vec);
 
+				// !!!!!!!!!!!!!!!!!!temp!!!!!!!!!!!!!!!!
+				// delete this return when finished
+				// !!!!!!!!!!!!!!!!!!temp!!!!!!!!!!!!!!!!
+				return;
+
 				popFromBack (gate2_chosen_vec, 2);
 			}
 
@@ -61,6 +66,7 @@ void Generator::generateEncoder ()
 			gate1_chosen_vec.pop_back ();
 		}
 
+		// TODO
 		// gate1 take another 2 from regs
 
 		// gate1 take another 3 from regs

@@ -5,6 +5,7 @@
 #include <vector>
 #include "Register.h"
 #include "XORGate.h"
+#include "StatesDiagram.h"
 
 enum {
 	READ_FROM_INPUT,
@@ -23,6 +24,8 @@ public:
 
 private:
 	Register registers[3];
+
+	StatesDiagram* stateDiagram;
 
 	XORGate* gate1;
 	XORGate* gate2;
