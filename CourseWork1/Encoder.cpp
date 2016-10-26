@@ -144,7 +144,7 @@ void Encoder::encode (string inputFile)
 		//cout << "Output: " << gate2output << gate1output << endl;
 	}
 
-	stateDiagram->print ();
+	stateDiagram->printToFile ("diagram_" + outputFile);
 
 	fout.close ();
 	fin.close ();
