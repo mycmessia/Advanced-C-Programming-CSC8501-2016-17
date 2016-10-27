@@ -10,9 +10,10 @@ int main ()
 {
 	Generator ge;
 	ge.generateEncoder ();
+	cout << "EncoderCount: " << ge.getEncoderCount () << endl;
 
-	ViterbiDecoder vd ("diagram_gate1_01_gate2_23.txt");
-	vd.decode ("output_gate1_01_gate2_23.txt");
+	//ViterbiDecoder vd ("diagram_gate1_01_gate2_23.txt");
+	//vd.decode ("output_gate1_01_gate2_23.txt");
 
 	system ("pause");
 	return 0;
