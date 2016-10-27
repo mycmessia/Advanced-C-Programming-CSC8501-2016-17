@@ -10,8 +10,7 @@
  */
 Encoder::Encoder (vector<int>& v1, vector<int>& v2)
 {
-	for (unsigned i = 0; i < 3; i++)
-		registers[i] = 0;
+	zeroRegisters ();
 
 	for (unsigned i = 0; i < v1.size (); i++)
 		gate1_vec.push_back (v1[i]);
@@ -23,6 +22,10 @@ Encoder::Encoder (vector<int>& v1, vector<int>& v2)
 	gate2 = new XORGate;
 
 	stateDiagram = new StatesDiagram;
+
+	fillStateDiagram ();
+	
+	zeroRegisters ();
 }
 
 Encoder::~Encoder ()
@@ -35,9 +38,107 @@ Encoder::~Encoder ()
 
 void Encoder::encode (string inputFile)
 {
+	vector<Register*> reg_temp1;
+	vector<Register*> reg_temp2;
+
 	string outputFile = "output_";
 
 	outputFile += "gate1_";
+	bool isGate1ReadFromInput = false;
+	for (unsigned i = 0; i < gate1_vec.size (); i++)
+	{
+		if (gate1_vec[i] == READ_FROM_INPUT)
+		{
+			isGate1ReadFromInput = true;
+		}
+		else if (gate1_vec[i] == READ_FROM_REG1)
+		{
+			reg_temp1.push_back (&registers[0]);
+		}
+		else if (gate1_vec[i] == READ_FROM_REG2)
+		{
+			reg_temp1.push_back (&registers[1]);
+		}
+		else if (gate1_vec[i] == READ_FROM_REG3)
+		{
+			reg_temp1.push_back (&registers[2]);
+		}
+
+		outputFile += to_string (gate1_vec[i]);
+	}
+
+	outputFile += "_gate2_";
+	bool isGate2ReadFromInput = false;
+	for (unsigned i = 0; i < gate2_vec.size (); i++)
+	{
+		if (gate2_vec[i] == READ_FROM_INPUT)
+		{
+			isGate1ReadFromInput = true;
+		}
+		else if (gate2_vec[i] == READ_FROM_REG1)
+		{
+			reg_temp2.push_back (&registers[0]);
+		}
+		else if (gate2_vec[i] == READ_FROM_REG2)
+		{
+			reg_temp2.push_back (&registers[1]);
+		}
+		else if (gate2_vec[i] == READ_FROM_REG3)
+		{
+			reg_temp2.push_back (&registers[2]);
+		}
+		outputFile += to_string (gate2_vec[i]);
+	}
+	outputFile += ".txt";
+
+	char c;
+	int n;
+
+	fstream fin, fout;
+
+	// Make sure the inputFile is exist
+	fin.open (inputFile, fstream::in);
+	fout.open (outputFile, fstream::out);
+
+	int gate2output, gate1output;
+
+	while (EOF != (c = fin.get ()))
+	{
+		n = c - '0';
+
+		// either gate1 or gate2 must read from the input file
+		if (isGate2ReadFromInput)
+		{
+			gate2output = gate2->calculate (reg_temp2, n);
+			fout <<	gate2output;
+		}
+		else
+		{
+			gate2output = gate2->calculate (reg_temp2);
+			fout << gate2output;
+		}
+
+		if (isGate1ReadFromInput)
+		{
+			gate1output = gate1->calculate (reg_temp1, n);
+			fout <<	gate1output;
+		}
+		else
+		{
+			gate1output = gate1->calculate (reg_temp1);
+			fout <<	gate1output;
+		}
+
+		shiftRegisters (n);
+	}
+
+	fout.close ();
+	fin.close ();
+}
+
+void Encoder::fillStateDiagram ()
+{	
+	string outputFile = "gate1_";
 	bool isGate1ReadFromInput = false;
 	for (unsigned i = 0; i < gate1_vec.size (); i++)
 	{
@@ -88,11 +189,9 @@ void Encoder::encode (string inputFile)
 	char c;
 	int n;
 
-	fstream fin, fout;
+	fstream fin;
 
-	// Make sure the inputFile is exist
-	fin.open (inputFile, fstream::in);
-	fout.open (outputFile, fstream::out);
+	fin.open ("generate_all_the_diagram_input.txt", fstream::in);
 
 	int gate2output, gate1output;
 
@@ -100,30 +199,23 @@ void Encoder::encode (string inputFile)
 	{
 		n = c - '0';
 
-		//cout << "Input: " << n << " ";
-		//cout << "Initial State: " << registers[0] << registers[1] << registers[2] << " ";
-
 		// either gate1 or gate2 must read from the input file
 		if (isGate2ReadFromInput)
 		{
 			gate2output = gate2->calculate (reg_vec2, n);
-			fout <<	gate2output;
 		}
 		else
 		{
 			gate2output = gate2->calculate (reg_vec2);
-			fout << gate2output;
 		}
 
 		if (isGate1ReadFromInput)
 		{
 			gate1output = gate1->calculate (reg_vec1, n);
-			fout <<	gate1output;
 		}
 		else
 		{
 			gate1output = gate1->calculate (reg_vec1);
-			fout <<	gate1output;
 		}
 
 		for (int i = 0; i < REGISTER_STATES_LENGTH; i++)
@@ -139,15 +231,11 @@ void Encoder::encode (string inputFile)
 		}
 
 		shiftRegisters (n);
-
-		//cout << "Final State: " << registers[0] << registers[1] << registers[2] << " ";
-		//cout << "Output: " << gate2output << gate1output << endl;
 	}
 
-	//stateDiagram->printToFile ("diagram_" + outputFile);
-
-	fout.close ();
 	fin.close ();
+
+	stateDiagram->printToFile ("diagram_" + outputFile);
 }
 
 void Encoder::shiftRegisters (int input)
@@ -156,4 +244,12 @@ void Encoder::shiftRegisters (int input)
 		registers[i] = registers [i - 1];
 
 	registers[0] = input;
+}
+
+void Encoder::zeroRegisters ()
+{
+	for (int i = 0; i < REGISTER_COUNT; i++)
+	{
+		registers[i] = 0;
+	}
 }

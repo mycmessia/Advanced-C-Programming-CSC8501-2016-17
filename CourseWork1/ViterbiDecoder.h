@@ -18,7 +18,7 @@ public:
 
 class ViterbiDecoder {
 public:
-	ViterbiDecoder ();
+	ViterbiDecoder (string diagram);
 	~ViterbiDecoder ();
 
 	StatesDiagram* statesDiagram;

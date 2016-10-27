@@ -2,6 +2,13 @@
 
 using namespace std;
 
+Register& Register::operator=(int n)
+{
+	value = n;
+
+	return *this;
+}
+
 Register Register::operator^ (const Register& r)
 {
 	Register newR;

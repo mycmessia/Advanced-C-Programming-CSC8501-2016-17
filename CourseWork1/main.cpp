@@ -11,7 +11,7 @@ int main ()
 	Generator ge;
 	ge.generateEncoder ();
 
-	ViterbiDecoder vd;
+	ViterbiDecoder vd ("diagram_gate1_01_gate2_23.txt");
 	vd.decode ("output_gate1_01_gate2_23.txt");
 
 	system ("pause");

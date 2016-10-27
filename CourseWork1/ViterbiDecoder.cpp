@@ -16,11 +16,11 @@ DecodeStep::~DecodeStep ()
 
 }
 
-ViterbiDecoder::ViterbiDecoder ()
+ViterbiDecoder::ViterbiDecoder (string diagram)
 {
 	statesDiagram = new StatesDiagram;
 
-	statesDiagram->initFromFile ("diagram_output_gate1_01_gate2_23.txt");
+	statesDiagram->initFromFile (diagram);
 }
 
 ViterbiDecoder::~ViterbiDecoder ()

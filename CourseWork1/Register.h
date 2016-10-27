@@ -16,6 +16,7 @@ public:
 
 	int get_value () { return value; }
 
+	Register& Register::operator=(int n);
 	Register operator^ (const Register& r);
 	friend ostream& operator<< (ostream& ostr, const Register& r);
 

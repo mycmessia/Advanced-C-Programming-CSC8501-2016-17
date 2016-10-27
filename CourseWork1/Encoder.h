@@ -37,6 +37,8 @@ private:
 	vector<Register*> reg_vec2;
 
 	void shiftRegisters (int input);
+	void fillStateDiagram ();
+	void zeroRegisters ();
 };
 
 #endif _ENCODER_
