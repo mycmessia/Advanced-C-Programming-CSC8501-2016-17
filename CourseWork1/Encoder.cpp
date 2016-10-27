@@ -41,7 +41,7 @@ void Encoder::encode (string inputFile)
 	vector<Register*> reg_temp1;
 	vector<Register*> reg_temp2;
 
-	string outputFile = "output_";
+	string outputFile = "encoder_output_";
 
 	outputFile += "gate1_";
 	bool isGate1ReadFromInput = false;

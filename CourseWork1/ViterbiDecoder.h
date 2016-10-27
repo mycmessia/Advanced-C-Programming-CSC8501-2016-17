@@ -2,6 +2,7 @@
 #ifndef __VITERBI_DECODER__
 #define __VITERBI_DECODER__
 
+#include <string>
 #include "StatesDiagram.h"
 
 class DecodeStep {
@@ -18,14 +19,16 @@ public:
 
 class ViterbiDecoder {
 public:
-	ViterbiDecoder (string diagram);
+	ViterbiDecoder (string& diagram);
 	~ViterbiDecoder ();
 
 	StatesDiagram* statesDiagram;
 
 	void calcHD (DecodeStep* ds, int receviedN1, int receivedN2);
 	void checkDiagramSet (DecodeStep* ds);
-	void decode (string receivedFile);
+	void decode (string& receivedFile);
+
+	string outputFileName;
 
 private:
 	DecodeStep* input0tree;

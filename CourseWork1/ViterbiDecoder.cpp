@@ -16,7 +16,7 @@ DecodeStep::~DecodeStep ()
 
 }
 
-ViterbiDecoder::ViterbiDecoder (string diagram)
+ViterbiDecoder::ViterbiDecoder (string& diagram)
 {
 	statesDiagram = new StatesDiagram;
 
@@ -28,8 +28,10 @@ ViterbiDecoder::~ViterbiDecoder ()
 	delete statesDiagram;
 }
 
-void ViterbiDecoder::decode (string receivedFile)
+void ViterbiDecoder::decode (string& receivedFile)
 {
+	outputFileName = "decoder_" + receivedFile;
+
 	vector< vector <DecodeStep*> > vec;
 
 	fstream fin;
@@ -186,15 +188,6 @@ void ViterbiDecoder::decode (string receivedFile)
 
 	fin.close ();
 
-	//for (unsigned i = 0; i < vec.size (); i++)
-	//{
-	//	for (unsigned j = 0; j < vec[i].size (); j++)
-	//	{
-	//		cout << vec[i][j]->hd;
-	//	}
-	//	cout << endl;
-	//}
-
 	deque<int> path;
 
 	int lastFinalStates[REGISTER_COUNT] = {0, 0, 0};
@@ -266,11 +259,15 @@ void ViterbiDecoder::decode (string receivedFile)
 		stepCounter--;
 	}
 
+	fstream fout;
+	fout.open (outputFileName, fstream::out);
+
 	for (unsigned i = 0; i < vec.size (); i++)
 	{
-		cout << vec[i][path[i]]->input;
+		fout << vec[i][path[i]]->input;
 	}
-	cout << endl;
+
+	fout.close ();
 
 	for (unsigned i = 0; i < vec.size (); i++)
 	{

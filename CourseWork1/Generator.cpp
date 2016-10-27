@@ -76,6 +76,19 @@ void Generator::doEncoding (vector<int>& gate1_chosen_vec, vector<int>& gate2_ch
 
 	if (isObeyConstraints (gate1_chosen_vec, gate2_chosen_vec))
 	{
+		cout << "gate1_";
+		for (unsigned i = 0; i < gate1_chosen_vec.size (); i++)
+		{
+			cout << gate1_chosen_vec[i];
+		}
+		
+		cout << "_gate2_";
+		for (unsigned i = 0; i < gate2_chosen_vec.size (); i++)
+		{
+			cout << gate2_chosen_vec[i];
+		}
+		cout << endl;
+
 		encoderCount++;
 
 		Encoder encoder (gate1_chosen_vec, gate2_chosen_vec);
@@ -104,44 +117,38 @@ void Generator::generateEncoder ()
 	// gate1 take the input
 	// ----------------------------------------------------------------------
 	gate1_chosen_vec.push_back (READ_FROM_INPUT);
-	for (int i = 1; i < 4; i++)
+
+	// gate1 take another 1 from reg
+	for (int j = 1; j < 4; j++)
 	{
-		// gate1 take another 1 from reg
-		for (int j = 1; j < 4; j++)
+		gate1_chosen_vec.push_back (j);
+
+		// gate2 take 2 from reg
+		for (int k = 1; k < 4; k++)
 		{
-			gate1_chosen_vec.push_back (j);
-
-			// gate2 take 2 from reg
-			for (int k = 1; k < 4; k++)
+			for (int l = 1; l < 4; l++)
 			{
-				for (int l = 1; l < 4; l++)
+				if (l != k)
 				{
-					if (l != k)
-					{
-						gate2_chosen_vec.push_back (l);
-					}
+					gate2_chosen_vec.push_back (l);
 				}
-
-				doEncoding (gate1_chosen_vec, gate2_chosen_vec);
-
-				popFromBack (gate2_chosen_vec, 2);
-			}
-
-			// gate2 take 3 from reg
-			for (int k = 1; k < 4; k++)
-			{
-				gate2_chosen_vec.push_back (k);
 			}
 
 			doEncoding (gate1_chosen_vec, gate2_chosen_vec);
 
-			popFromBack (gate2_chosen_vec, 3);
-
-			gate1_chosen_vec.pop_back ();
+			popFromBack (gate2_chosen_vec, 2);
 		}
 
-		// gate1 take another 2 from regs
+		// gate2 take 3 from reg
+		for (int k = 1; k < 4; k++)
+		{
+			gate2_chosen_vec.push_back (k);
+		}
 
-		// gate1 take another 3 from regs
+		doEncoding (gate1_chosen_vec, gate2_chosen_vec);
+
+		popFromBack (gate2_chosen_vec, 3);
+
+		gate1_chosen_vec.pop_back ();
 	}
 }
