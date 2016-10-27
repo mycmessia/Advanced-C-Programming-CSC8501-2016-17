@@ -24,7 +24,7 @@ public:
 	StatesDiagram* statesDiagram;
 
 	void calcHD (DecodeStep* ds, int receviedN1, int receivedN2);
-	void checkDiagramSet (DecodeStep* ds);
+	void setOutputFinalStateByDiagram (DecodeStep* ds);
 	void decode (string receivedFile);
 
 private:
