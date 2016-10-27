@@ -12,7 +12,7 @@ int main ()
 	ge.generateEncoder ();
 
 	ViterbiDecoder vd;
-	vd.decode ("binaryFile.txt");
+	vd.decode ("output_gate1_01_gate2_23.txt");
 
 	system ("pause");
 	return 0;

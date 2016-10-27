@@ -30,7 +30,6 @@ ViterbiDecoder::~ViterbiDecoder ()
 
 void ViterbiDecoder::decode (string receivedFile)
 {
-	// !!!!!need to delete everything in vec manually
 	vector< vector <DecodeStep*> > vec;
 
 	fstream fin;
@@ -69,11 +68,11 @@ void ViterbiDecoder::decode (string receivedFile)
 		}
 		else
 		{
-			int limit = 2;
+			int limit = REGISTER_COUNT;
 
 			if (stepCounter > limit)
 			{
-				for (unsigned h = 0; h < vec[limit].size (); h++)
+				for (unsigned h = 0; h < vec[limit - 1].size (); h++)
 				{
 					for (int i = 0; i < 2; i++)
 					{
@@ -81,17 +80,39 @@ void ViterbiDecoder::decode (string receivedFile)
 						{
 							for (int k = 0; k < 2; k++)
 							{
-								if (i == vec[stepCounter - 1][h]->finalState[0] &&
-									j == vec[stepCounter - 1][h]->finalState[1] &&
-									k == vec[stepCounter - 1][h]->finalState[2])
+								if (i == vec[limit - 1][h]->finalState[0] &&
+									j == vec[limit - 1][h]->finalState[1] &&
+									k == vec[limit - 1][h]->finalState[2])
 								{
 									DecodeStep* ds0 = new DecodeStep;
 									ds0->initState[0] = i;
 									ds0->initState[1] = j;
 									ds0->initState[2] = k;
 									ds0->input = 0;
-									ds0->hd = vec[stepCounter - 1][h]->hd;
 									checkDiagramSet (ds0);
+
+									bool isSetHD0 = false;
+									for (unsigned l = 0; l < vec[stepCounter - 1].size (); l++)
+									{
+										if (vec[stepCounter - 1][l]->finalState[0] == i &&
+											vec[stepCounter - 1][l]->finalState[1] == j && 
+											vec[stepCounter - 1][l]->finalState[2] == k)
+										{
+											if (isSetHD0)
+											{
+												if (vec[stepCounter - 1][l]->hd < ds0->hd)
+												{
+													ds0->hd = vec[stepCounter - 1][l]->hd;
+												}
+											}
+											else
+											{
+												ds0->hd = vec[stepCounter - 1][l]->hd;
+												isSetHD0 = true;
+											}
+										}
+									}
+
 									calcHD (ds0, n1, n2);
 									vec[stepCounter].push_back (ds0);
 
@@ -100,7 +121,29 @@ void ViterbiDecoder::decode (string receivedFile)
 									ds1->initState[1] = j;
 									ds1->initState[2] = k;
 									ds1->input = 1;
-									ds1->hd = vec[stepCounter - 1][h]->hd;
+									
+									bool isSetHD1 = false;
+									for (unsigned l = 0; l < vec[stepCounter - 1].size (); l++)
+									{
+										if (vec[stepCounter - 1][l]->finalState[0] == i &&
+											vec[stepCounter - 1][l]->finalState[1] == j && 
+											vec[stepCounter - 1][l]->finalState[2] == k)
+										{
+											if (isSetHD1)
+											{
+												if (vec[stepCounter - 1][l]->hd < ds1->hd)
+												{
+													ds1->hd = vec[stepCounter - 1][l]->hd;
+												}
+											}
+											else
+											{
+												ds1->hd = vec[stepCounter - 1][l]->hd;
+												isSetHD1 = true;
+											}
+										}
+									}
+
 									checkDiagramSet (ds1);
 									calcHD (ds1, n1, n2);
 									vec[stepCounter].push_back (ds1);
@@ -113,7 +156,7 @@ void ViterbiDecoder::decode (string receivedFile)
 			else
 			{
 				// iterate last columon each one input 0 and 1
-				for (unsigned int i = 0; i < vec[stepCounter - 1].size (); i++)
+				for (unsigned i = 0; i < vec[stepCounter - 1].size (); i++)
 				{
 					DecodeStep* ds0 = new DecodeStep;
 					ds0->initState[0] = vec[stepCounter - 1][i]->finalState[0];
@@ -142,6 +185,15 @@ void ViterbiDecoder::decode (string receivedFile)
 	}
 
 	fin.close ();
+
+	//for (unsigned i = 0; i < vec.size (); i++)
+	//{
+	//	for (unsigned j = 0; j < vec[i].size (); j++)
+	//	{
+	//		cout << vec[i][j]->hd;
+	//	}
+	//	cout << endl;
+	//}
 
 	deque<int> path;
 
