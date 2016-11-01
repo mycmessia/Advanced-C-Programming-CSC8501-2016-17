@@ -55,7 +55,7 @@ void ViterbiDecoder::decode (string& receivedFile)
 			ds0->initState[1] = 0;
 			ds0->initState[2] = 0;
 			ds0->input = 0;
-			checkDiagramSet (ds0);
+			setOutputFinalStateByDiagram (ds0);
 			calcHD (ds0, n1, n2);
 			vec[stepCounter].push_back (ds0);
 
@@ -64,7 +64,7 @@ void ViterbiDecoder::decode (string& receivedFile)
 			ds1->initState[1] = 0;
 			ds1->initState[2] = 0;
 			ds1->input = 1;
-			checkDiagramSet (ds1);
+			setOutputFinalStateByDiagram (ds1);
 			calcHD (ds1, n1, n2);
 			vec[stepCounter].push_back (ds1);
 		}
@@ -91,7 +91,7 @@ void ViterbiDecoder::decode (string& receivedFile)
 									ds0->initState[1] = j;
 									ds0->initState[2] = k;
 									ds0->input = 0;
-									checkDiagramSet (ds0);
+									setOutputFinalStateByDiagram (ds0);
 
 									bool isSetHD0 = false;
 									for (unsigned l = 0; l < vec[stepCounter - 1].size (); l++)
@@ -146,7 +146,7 @@ void ViterbiDecoder::decode (string& receivedFile)
 										}
 									}
 
-									checkDiagramSet (ds1);
+									setOutputFinalStateByDiagram (ds1);
 									calcHD (ds1, n1, n2);
 									vec[stepCounter].push_back (ds1);
 								}
@@ -166,7 +166,7 @@ void ViterbiDecoder::decode (string& receivedFile)
 					ds0->initState[2] = vec[stepCounter - 1][i]->finalState[2];
 					ds0->input = 0;
 					ds0->hd = vec[stepCounter - 1][i]->hd;
-					checkDiagramSet (ds0);
+					setOutputFinalStateByDiagram (ds0);
 					calcHD (ds0, n1, n2);
 					vec[stepCounter].push_back (ds0);
 
@@ -176,7 +176,7 @@ void ViterbiDecoder::decode (string& receivedFile)
 					ds1->initState[2] = vec[stepCounter - 1][i]->finalState[2];
 					ds1->input = 1;
 					ds1->hd = vec[stepCounter - 1][i]->hd;
-					checkDiagramSet (ds1);
+					setOutputFinalStateByDiagram (ds1);
 					calcHD (ds1, n1, n2);
 					vec[stepCounter].push_back (ds1);
 				}
@@ -292,7 +292,7 @@ void ViterbiDecoder::calcHD (DecodeStep* ds, int receviedN1, int receivedN2)
 	}
 }
 
-void ViterbiDecoder::checkDiagramSet (DecodeStep* ds)
+void ViterbiDecoder::setOutputFinalStateByDiagram (DecodeStep* ds)
 {
 	for (int i = 0; i < REGISTER_STATES_LENGTH; i++)
 	{
