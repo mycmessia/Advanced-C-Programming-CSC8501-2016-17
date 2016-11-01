@@ -2,9 +2,9 @@
 
 int XORGate::calculate (vector<Register*>& v)
 {
-	Register temp;
+	Register temp = *v[0];
 
-	for (unsigned i = 0; i < v.size (); i++)
+	for (unsigned i = 1; i < v.size (); i++)
 	{
 		temp = temp ^ *v[i];
 	}
@@ -14,9 +14,9 @@ int XORGate::calculate (vector<Register*>& v)
 
 int XORGate::calculate (vector<Register*>& v, int input)
 {
-	Register temp;
+	Register temp = *v[0];;
 
-	for (unsigned i = 0; i < v.size (); i++)
+	for (unsigned i = 1; i < v.size (); i++)
 	{
 		temp = temp ^ *v[i];
 	}
